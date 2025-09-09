@@ -2,36 +2,100 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Mi Cuaderno Digital</title>
+  <title>Cuaderno Académico Digital</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #eef7ff;
+      background-color: #f0f7ff;
       color: #2c3e50;
-      text-align: center;
-      padding: 40px 20px;
-      margin: 0;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
     }
     h1 {
       color: #2980b9;
-    }
-    p {
-      font-size: 18px;
-      line-height: 1.6;
+      text-align: center;
     }
     .container {
-      max-width: 600px;
-      margin: 0 auto;
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+    button {
+      background-color: #3498db;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 6px;
+      width: 100%;
+    }
+    button:hover {
+      background-color: #2980b9;
+    }
+    .task {
+      padding: 12px;
+      background-color: #f8f9fa;
+      border-left: 5px solid #3498db;
+      margin: 10px 0;
+      border-radius: 4px;
+      font-size: 15px;
+    }
+    footer {
+      text-align: center;
+      margin-top: 30px;
+      color: #7f8c8d;
+      font-size: 14px;
     }
   </style>
 </head>
 <body>
+  <h1>📘 Cuaderno Académico Digital</h1>
+  <p>Hola, soy <strong>[TU NOMBRE]</strong>, estudiante de 11°. Este cuaderno lo hago para ayudar a mi colegio.</p>
+
   <div class="container">
-    <h1>📘 Cuaderno Académico Digital</h1>
-    <p>Hola, soy <strong>[TU NOMBRE]</strong>, estudiante de 11°.</p>
-    <p>Este cuaderno lo hago para ayudar a mis compañeros a organizar sus tareas y notas.</p>
-    <p>¡Pronto podrán usarlo desde cualquier celular!</p>
+    <h2>📝 Mis Tareas</h2>
+    <input type="text" id="taskInput" placeholder="Escribe una tarea (ej: Hacer el ensayo de Ciencias)">
+    <button onclick="addTask()">Agregar Tarea</button>
+
+    <div id="taskList">
+      <!-- Aquí aparecerán las tareas -->
+    </div>
   </div>
+
+  <footer>
+    Proyecto open source para estudiantes | Comparte este enlace con tus compañeros
+  </footer>
+
+  <script>
+    function addTask() {
+      const input = document.getElementById("taskInput");
+      const taskText = input.value.trim();
+
+      if (taskText === "") {
+        alert("Por favor, escribe una tarea");
+        return;
+      }
+
+      const taskList = document.getElementById("taskList");
+      const taskDiv = document.createElement("div");
+      taskDiv.className = "task";
+      taskDiv.textContent = taskText;
+      taskList.appendChild(taskDiv);
+
+      input.value = ""; // Limpia el campo
+    }
+  </script>
 </body>
 </html>
