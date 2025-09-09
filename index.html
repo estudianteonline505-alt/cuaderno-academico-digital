@@ -23,9 +23,9 @@
       border-radius: 10px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
-    input[type="text"] {
+    input, select, button {
       width: 100%;
-      padding: 12px;
+      padding: 10px;
       margin: 10px 0;
       border: 1px solid #ccc;
       border-radius: 6px;
@@ -35,11 +35,7 @@
       background-color: #3498db;
       color: white;
       border: none;
-      padding: 12px 20px;
-      font-size: 16px;
       cursor: pointer;
-      border-radius: 6px;
-      width: 100%;
     }
     button:hover {
       background-color: #2980b9;
@@ -51,6 +47,20 @@
       margin: 10px 0;
       border-radius: 4px;
       font-size: 15px;
+    }
+    .task span {
+      font-weight: bold;
+      color: #2980b9;
+    }
+    .delete-btn {
+      background-color: #e74c3c;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      margin-left: 10px;
+      cursor: pointer;
     }
     footer {
       text-align: center;
@@ -65,10 +75,21 @@
   <p>Hola, soy <strong>[TU NOMBRE]</strong>, estudiante de 11°. Este cuaderno lo hago para ayudar a mi colegio.</p>
 
   <div class="container">
-    <h2>📝 Mis Tareas</h2>
-    <input type="text" id="taskInput" placeholder="Escribe una tarea (ej: Hacer el ensayo de Ciencias)">
+    <h2>📝 Nueva Tarea</h2>
+    <input type="text" id="taskInput" placeholder="Escribe la tarea">
+
+    <select id="subjectSelect">
+      <option value="Matemáticas">Matemáticas</option>
+      <option value="Ciencias">Ciencias</option>
+      <option value="Lenguaje">Lenguaje</option>
+      <option value="Historia">Historia</option>
+      <option value="Inglés">Inglés</option>
+      <option value="Otra">Otra materia</option>
+    </select>
+
     <button onclick="addTask()">Agregar Tarea</button>
 
+    <h2>📋 Mis Tareas</h2>
     <div id="taskList">
       <!-- Las tareas se cargarán aquí -->
     </div>
@@ -79,15 +100,19 @@
   </footer>
 
   <script>
-    // Cargar tareas guardadas al abrir la página
+    // Cargar tareas al iniciar
     function loadTasks() {
       const taskList = document.getElementById("taskList");
       const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
-      tasks.forEach(taskText => {
+      tasks.forEach((task, index) => {
         const taskDiv = document.createElement("div");
         taskDiv.className = "task";
-        taskDiv.textContent = taskText;
+        taskDiv.innerHTML = `
+          ${task.text} 
+          <span>(${task.subject})</span>
+          <button class="delete-btn" onclick="deleteTask(${index})">Borrar</button>
+        `;
         taskList.appendChild(taskDiv);
       });
     }
@@ -95,28 +120,45 @@
     // Agregar nueva tarea
     function addTask() {
       const input = document.getElementById("taskInput");
+      const select = document.getElementById("subjectSelect");
       const taskText = input.value.trim();
+      const subject = select.value;
 
       if (taskText === "") {
         alert("Por favor, escribe una tarea");
         return;
       }
 
+      const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+      const newTask = { text: taskText, subject: subject };
+      tasks.push(newTask);
+      localStorage.setItem("tasks", JSON.stringify(tasks));
+
       const taskList = document.getElementById("taskList");
       const taskDiv = document.createElement("div");
       taskDiv.className = "task";
-      taskDiv.textContent = taskText;
+      taskDiv.innerHTML = `
+        ${taskText} 
+        <span>(${subject})</span>
+        <button class="delete-btn" onclick="deleteTask(${tasks.length - 1})">Borrar</button>
+      `;
       taskList.appendChild(taskDiv);
 
-      // Guardar en localStorage
-      const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-      tasks.push(taskText);
-      localStorage.setItem("tasks", JSON.stringify(tasks));
-
-      input.value = ""; // Limpia el campo
+      input.value = ""; // Limpiar campo
     }
 
-    // Cargar tareas cuando la página se abra
+    // Borrar una tarea
+    function deleteTask(index) {
+      const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+      tasks.splice(index, 1); // Elimina 1 elemento en la posición index
+      localStorage.setItem("tasks", JSON.stringify(tasks));
+
+      // Recargar la lista
+      document.getElementById("taskList").innerHTML = "";
+      loadTasks();
+    }
+
+    // Cargar tareas cuando la página abra
     window.onload = loadTasks;
   </script>
 </body>
