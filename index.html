@@ -1,4 +1,4 @@
-U<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
@@ -70,7 +70,7 @@ U<!DOCTYPE html>
     <button onclick="addTask()">Agregar Tarea</button>
 
     <div id="taskList">
-      <!-- Aquí aparecerán las tareas -->
+      <!-- Las tareas se cargarán aquí -->
     </div>
   </div>
 
@@ -79,6 +79,20 @@ U<!DOCTYPE html>
   </footer>
 
   <script>
+    // Cargar tareas guardadas al abrir la página
+    function loadTasks() {
+      const taskList = document.getElementById("taskList");
+      const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+      tasks.forEach(taskText => {
+        const taskDiv = document.createElement("div");
+        taskDiv.className = "task";
+        taskDiv.textContent = taskText;
+        taskList.appendChild(taskDiv);
+      });
+    }
+
+    // Agregar nueva tarea
     function addTask() {
       const input = document.getElementById("taskInput");
       const taskText = input.value.trim();
@@ -94,6 +108,16 @@ U<!DOCTYPE html>
       taskDiv.textContent = taskText;
       taskList.appendChild(taskDiv);
 
+      // Guardar en localStorage
+      const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+      tasks.push(taskText);
+      localStorage.setItem("tasks", JSON.stringify(tasks));
+
       input.value = ""; // Limpia el campo
     }
+
+    // Cargar tareas cuando la página se abra
+    window.onload = loadTasks;
   </script>
+</body>
+</html>
